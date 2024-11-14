@@ -45,7 +45,7 @@ const Scene: React.FC<SceneProps> = ({ points }) => {
           <bufferAttribute attach="attributes-position" array={new Float32Array(positions)} count={positions.length / 3} itemSize={3} />
           <bufferAttribute attach="attributes-color" array={new Float32Array(colors)} count={colors.length / 3} itemSize={3} />
         </bufferGeometry>
-        <pointsMaterial vertexColors size={0.06} />
+        <pointsMaterial vertexColors size={0.05} />
       </points>
     </>
   );

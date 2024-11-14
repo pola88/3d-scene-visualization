@@ -10,9 +10,14 @@ const Cuboids: React.FC<CuboidsProps> = ({ cuboids }) => {
   return (
     <>
       {cuboids.map((cuboid, index) => (
-        <mesh key={index} position={new THREE.Vector3(...cuboid.position)} rotation={[0, 0, cuboid.yaw]}>
+        <mesh key={index} position={cuboid.position} rotation={[0, 0, cuboid.yaw]}>
           <boxGeometry args={cuboid.dimensions} />
-          <meshStandardMaterial color="skyblue" transparent opacity={0.3} />
+          <meshStandardMaterial color="yellow" transparent opacity={0.2} />
+          <lineSegments>
+          
+          <edgesGeometry args={[new THREE.BoxGeometry(...cuboid.dimensions)]} />
+            <lineBasicMaterial color="black" linewidth={10} />
+          </lineSegments>
         </mesh>
       ))}
     </>
