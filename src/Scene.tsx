@@ -1,15 +1,5 @@
 import React, { useMemo } from 'react';
-import { OrbitControls } from '@react-three/drei';
-
-interface Point {
-  x: number;
-  y: number;
-  z: number;
-}
-
-interface JSONData {
-  points: number[][];
-}
+import { Point } from './types';
 
 const getColorFromZ = (z: number, zMin: number, zMax: number): [number, number, number] => {
   const ratio = (z - zMin) / (zMax - zMin);
@@ -18,14 +8,14 @@ const getColorFromZ = (z: number, zMin: number, zMax: number): [number, number, 
 };
 
 interface SceneProps {
-  points: JSONData;
+  points: number[][];
 }
 
 const Scene: React.FC<SceneProps> = ({ points }) => {
   const { positions, colors } = useMemo(() => {
     let zMax = 0;
     let zMin = 0;
-    const parsedPoints: Point[] = points.points.map(
+    const parsedPoints: Point[] = points.map(
       ([x, y, z]) => {
         if (z > zMax) {
           zMax = z;
@@ -41,8 +31,8 @@ const Scene: React.FC<SceneProps> = ({ points }) => {
 
     parsedPoints.forEach(({ x, y, z }) => {
       positions.push(x, y, z);
-      const [r, g, b] = getColorFromZ(z, zMin, zMax);
-      colors.push(r, g, b);
+      const color = getColorFromZ(z, zMin, zMax);
+      colors.push(...color);
     });
 
     return { positions, colors };
@@ -50,14 +40,12 @@ const Scene: React.FC<SceneProps> = ({ points }) => {
 
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <OrbitControls />
       <points>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" array={new Float32Array(positions)} count={positions.length / 3} itemSize={3} />
           <bufferAttribute attach="attributes-color" array={new Float32Array(colors)} count={colors.length / 3} itemSize={3} />
         </bufferGeometry>
-        <pointsMaterial vertexColors size={0.05} />
+        <pointsMaterial vertexColors size={0.06} />
       </points>
     </>
   );
