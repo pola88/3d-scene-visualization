@@ -1,16 +1,21 @@
-import React, { useMemo } from 'react';
+import React from 'react';
+import { Cuboid as CuboidDT } from './types';
 import * as THREE from 'three';
-import { Cuboid } from './types';
 
 interface CuboidsProps {
-  cuboids: Cuboid[]
+  cuboids: CuboidDT[];
+  showInfo: (cuboid: CuboidDT ) => void;
 }
 
-const Cuboids: React.FC<CuboidsProps> = ({ cuboids }) => {
+const Cuboids: React.FC<CuboidsProps> = ({ cuboids, showInfo }) => {
   return (
     <>
       {cuboids.map((cuboid, index) => (
-        <mesh key={index} position={cuboid.position} rotation={[0, 0, cuboid.yaw]}>
+        <mesh 
+          key={index}
+          position={cuboid.position} rotation={[0, 0, cuboid.yaw]}
+          onPointerOver={() => showInfo(cuboid) }
+        >
           <boxGeometry args={cuboid.dimensions} />
           <meshStandardMaterial color="yellow" transparent opacity={0.2} />
           <lineSegments>
