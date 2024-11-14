@@ -8,6 +8,7 @@ interface CuboidsProps {
 }
 
 const Cuboids: React.FC<CuboidsProps> = ({ cuboids, showInfo }) => {
+  const color = new THREE.Color(0Xedfc1c);
   return (
     <>
       {cuboids.map((cuboid, index) => (
@@ -17,11 +18,11 @@ const Cuboids: React.FC<CuboidsProps> = ({ cuboids, showInfo }) => {
           onPointerOver={() => showInfo(cuboid) }
         >
           <boxGeometry args={cuboid.dimensions} />
-          <meshStandardMaterial color="yellow" transparent opacity={0.2} />
+          <meshStandardMaterial color={color} transparent opacity={0.4} />
           <lineSegments>
           
           <edgesGeometry args={[new THREE.BoxGeometry(...cuboid.dimensions)]} />
-            <lineBasicMaterial color="black" linewidth={10} />
+            <lineBasicMaterial color="red" linewidth={2} />
           </lineSegments>
         </mesh>
       ))}
