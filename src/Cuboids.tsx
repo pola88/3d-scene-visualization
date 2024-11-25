@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as THREE from 'three';
 import { Cuboid as CuboidDT } from './types';
 import Cuboid from './Cuboid';
 
@@ -9,15 +10,27 @@ interface CuboidsProps {
 }
 
 const Cuboids: React.FC<CuboidsProps> = ({ cuboids, showInfo, opacity }) => {
+  const [currentCuboid, setCurrentCuboid] = useState<string>('');
+
+  const onPointerOver = (cuboid: CuboidDT) => {
+    showInfo(cuboid);
+    setCurrentCuboid(cuboid.uuid);
+  }
+
   return (
     <>
       {cuboids.map((cuboid, index) => (
         <mesh 
           key={index}
           position={cuboid.position} rotation={[0, 0, cuboid.yaw]}
-          onPointerOver={() => showInfo(cuboid) }
+          onPointerOver={() => onPointerOver(cuboid) }
         >
-          <Cuboid cuboid={cuboid} opacity={opacity}/>
+          <Cuboid
+            cuboid={cuboid} opacity={opacity}
+            {...(currentCuboid === cuboid.uuid && {
+              color: new THREE.Color(0Xff0033)
+            })}
+          />
         </mesh>
       ))}
     </>

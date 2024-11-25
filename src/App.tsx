@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, CameraControls } from '@react-three/drei';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import styled from 'styled-components';
 import Slider from '@mui/material/Slider';
 
@@ -61,7 +62,7 @@ const App: React.FC = () => {
   const [currentFrame, setCurrentFrame] = useState<number>(0);
   const [currentOpacity, setCurrentOpacity] = useState<number>(4);
   const [currentCuboid, setCurrentCuboid] = useState<Cuboid>();
-  
+
   useEffect(() => {
     fetch(`${process.env.REACT_APP_URL_EXAMPLES}${(currentFrame).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}.json`)
       .then((response) => response.json())
@@ -88,39 +89,37 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      {data
-        ? <MainContainer>
-            <CanvasContainer>
-              <Canvas style={{ height: '100vh', backgroundColor: 'black' }} camera={{ position: [0, -20, 15], fov: 75 }}>
-                <CameraControls ref={cameraControlRef}/>
-                <ambientLight intensity={0.5} />
-                <OrbitControls />
-                <Cuboids cuboids={data.cuboids} showInfo={onShowInfo} opacity={currentOpacity / 10}/>
-                <Scene points={data.points} />
-              </Canvas>
+      <MainContainer>
+        <CanvasContainer>
+          <Canvas style={{ height: '100vh', backgroundColor: 'black' }} camera={{ position: [0, -20, 15], fov: 75 }}>
+            <CameraControls ref={cameraControlRef}/>
+            <ambientLight intensity={0.5} />
+            <OrbitControls />
+            {data &&  <>
+              <Cuboids cuboids={data.cuboids} showInfo={onShowInfo} opacity={currentOpacity / 10}/>}
+              <Scene points={data.points} />
+            </>}
+          </Canvas>
 
-              <StyledSlider>
-                <Typography id="non-linear-slider" gutterBottom>
-                  Frame: {currentFrame}/10
-                </Typography>
-                <Slider value={currentFrame} aria-label="Default" valueLabelDisplay="auto" max={10} onChange={handleChange} />
-              </StyledSlider>
+          <StyledSlider>
+            <Typography id="non-linear-slider" gutterBottom>
+              Frame: {currentFrame}/10
+            </Typography>
+            <Slider value={currentFrame} aria-label="Default" valueLabelDisplay="auto" max={10} onChange={handleChange} />
+          </StyledSlider>
 
-              <StyledSliderOpacity>
-                <Typography id="non-linear-slider" gutterBottom>
-                  Current Opacity: {currentOpacity}/1
-                </Typography>
-                <Slider value={currentOpacity} aria-label="Default" valueLabelDisplay="auto" max={10} onChange={handleChangeOpacity} />
-              </StyledSliderOpacity>
-            </CanvasContainer>
-            <RightSideContainer>
-              <CuboidInfo cuboid={currentCuboid} />
-              <Controls cameraRef={cameraControlRef} />
-            </RightSideContainer>
-            
-          </MainContainer>
-        : <p>Loading point cloud...</p>
-      }
+          <StyledSliderOpacity>
+            <Typography id="non-linear-slider" gutterBottom>
+              Current Opacity: {currentOpacity / 10}/1
+            </Typography>
+            <Slider value={currentOpacity} aria-label="Default" valueLabelDisplay="auto" max={10} onChange={handleChangeOpacity} />
+          </StyledSliderOpacity>
+        </CanvasContainer>
+        <RightSideContainer>
+          <CuboidInfo cuboid={currentCuboid} />
+          <Controls cameraRef={cameraControlRef} />
+        </RightSideContainer>     
+      </MainContainer>
     </div>
   );
 };

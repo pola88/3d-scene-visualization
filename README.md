@@ -1,5 +1,5 @@
 
-[Demo][https://3d-scene-visualization.vercel.app]
+[Demo](https://3d-scene-visualization.vercel.app)
 
 # 3D Scene Visualization Challenge
 
