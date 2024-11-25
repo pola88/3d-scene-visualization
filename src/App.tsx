@@ -101,9 +101,9 @@ const App: React.FC = () => {
 
               <StyledSlider>
                 <Typography id="non-linear-slider" gutterBottom>
-                  Frame: {currentFrame}/50
+                  Frame: {currentFrame}/10
                 </Typography>
-                <Slider value={currentFrame} aria-label="Default" valueLabelDisplay="auto" max={50} onChange={handleChange} />
+                <Slider value={currentFrame} aria-label="Default" valueLabelDisplay="auto" max={10} onChange={handleChange} />
               </StyledSlider>
 
               <StyledSliderOpacity>
