@@ -12,8 +12,8 @@ interface SceneProps {
   points: number[][];
 }
 
-let currentPoints: Float32Array | undefined;
-let currentColors: Float32Array | undefined;
+let currentPoints: Float32Array;
+let currentColors: Float32Array;
 
 const Scene: React.FC<SceneProps> = ({ points }) => {  
   const geometryRef = useRef<any>();
@@ -63,11 +63,8 @@ const Scene: React.FC<SceneProps> = ({ points }) => {
 
   return (
     <>
-      { currentPoints && currentColors && <points>
-        <bufferGeometry ref={geometryRef}>
-          <bufferAttribute attach="attributes-position" array={currentPoints} count={currentPoints.length / 3} itemSize={3} />
-          <bufferAttribute attach="attributes-color" array={currentColors} count={currentColors.length / 3} itemSize={3} />
-        </bufferGeometry>
+      {<points>
+        <bufferGeometry ref={geometryRef} />
         <pointsMaterial vertexColors size={0.05} />
       </points>}
     </>

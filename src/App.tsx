@@ -63,7 +63,7 @@ const App: React.FC = () => {
   const [currentCuboid, setCurrentCuboid] = useState<Cuboid>();
   
   useEffect(() => {
-    fetch(`https://static.scale.com/uploads/pandaset-challenge/frame_${(currentFrame).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}.json`)
+    fetch(`${process.env.REACT_APP_URL_EXAMPLES}${(currentFrame).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}.json`)
       .then((response) => response.json())
       .then((json) => {
         const cuboids = parseCuboids(json.cuboids)
