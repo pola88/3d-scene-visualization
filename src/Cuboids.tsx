@@ -4,10 +4,11 @@ import * as THREE from 'three';
 
 interface CuboidsProps {
   cuboids: CuboidDT[];
+  opacity: number;
   showInfo: (cuboid: CuboidDT ) => void;
 }
 
-const Cuboids: React.FC<CuboidsProps> = ({ cuboids, showInfo }) => {
+const Cuboids: React.FC<CuboidsProps> = ({ cuboids, showInfo, opacity }) => {
   const color = new THREE.Color(0Xedfc1c);
   return (
     <>
@@ -18,7 +19,7 @@ const Cuboids: React.FC<CuboidsProps> = ({ cuboids, showInfo }) => {
           onPointerOver={() => showInfo(cuboid) }
         >
           <boxGeometry args={cuboid.dimensions} />
-          <meshStandardMaterial color={color} transparent opacity={0.4} />
+          <meshStandardMaterial color={color} transparent opacity={opacity} />
           <lineSegments>
           
           <edgesGeometry args={[new THREE.BoxGeometry(...cuboid.dimensions)]} />

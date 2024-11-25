@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import * as THREE from 'three';
 import { Point } from './types';
 
 const getColorFromZ = (z: number, zMin: number, zMax: number): [number, number, number] => {
@@ -11,8 +12,13 @@ interface SceneProps {
   points: number[][];
 }
 
-const Scene: React.FC<SceneProps> = ({ points }) => {
-  const { positions, colors } = useMemo(() => {
+let currentPoints: Float32Array | undefined;
+let currentColors: Float32Array | undefined;
+
+const Scene: React.FC<SceneProps> = ({ points }) => {  
+  const geometryRef = useRef<any>();
+
+  useEffect( () => {
     let zMax = 0;
     let zMin = 0;
     const parsedPoints: Point[] = points.map(
@@ -35,18 +41,35 @@ const Scene: React.FC<SceneProps> = ({ points }) => {
       colors.push(...color);
     });
 
-    return { positions, colors };
+    if (currentPoints && currentColors && currentPoints.length >= positions.length) {
+      currentPoints.set(positions);
+      currentColors.set(colors);
+    } else {
+      currentPoints = new Float32Array(positions);
+      currentColors = new Float32Array(colors);
+    }
+
+    if (geometryRef.current) {
+      geometryRef.current.setAttribute(
+        'position',
+        new THREE.BufferAttribute(currentPoints, 3)
+      );
+      geometryRef.current.setAttribute(
+        'color',
+        new THREE.BufferAttribute(currentColors, 3)
+      );
+    }  
   }, [points]);
 
   return (
     <>
-      <points>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" array={new Float32Array(positions)} count={positions.length / 3} itemSize={3} />
-          <bufferAttribute attach="attributes-color" array={new Float32Array(colors)} count={colors.length / 3} itemSize={3} />
+      { currentPoints && currentColors && <points>
+        <bufferGeometry ref={geometryRef}>
+          <bufferAttribute attach="attributes-position" array={currentPoints} count={currentPoints.length / 3} itemSize={3} />
+          <bufferAttribute attach="attributes-color" array={currentColors} count={currentColors.length / 3} itemSize={3} />
         </bufferGeometry>
         <pointsMaterial vertexColors size={0.05} />
-      </points>
+      </points>}
     </>
   );
 };

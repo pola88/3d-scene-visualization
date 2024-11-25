@@ -45,10 +45,21 @@ const StyledSlider = styled.div`
   color: white;
 `;
 
+const StyledSliderOpacity = styled.div`
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 33%;
+  margin: auto;
+  color: white;
+`;
+
 const App: React.FC = () => {
   const cameraControlRef = useRef<CameraControls | null>(null);
   const [data, setData] = useState<JSONData | null>(null);
   const [currentFrame, setCurrentFrame] = useState<number>(0);
+  const [currentOpacity, setCurrentOpacity] = useState<number>(4);
   const [currentCuboid, setCurrentCuboid] = useState<Cuboid>();
   
   useEffect(() => {
@@ -71,6 +82,10 @@ const App: React.FC = () => {
     setCurrentFrame(newValue);
   };
 
+  const handleChangeOpacity = (event: Event, newValue: number) => {
+    setCurrentOpacity(newValue);
+  };
+
   return (
     <div className="App">
       {data
@@ -80,7 +95,7 @@ const App: React.FC = () => {
                 <CameraControls ref={cameraControlRef}/>
                 <ambientLight intensity={0.5} />
                 <OrbitControls />
-                <Cuboids cuboids={data.cuboids} showInfo={onShowInfo} />
+                <Cuboids cuboids={data.cuboids} showInfo={onShowInfo} opacity={currentOpacity / 10}/>
                 <Scene points={data.points} />
               </Canvas>
 
@@ -90,6 +105,13 @@ const App: React.FC = () => {
                 </Typography>
                 <Slider value={currentFrame} aria-label="Default" valueLabelDisplay="auto" max={50} onChange={handleChange} />
               </StyledSlider>
+
+              <StyledSliderOpacity>
+                <Typography id="non-linear-slider" gutterBottom>
+                  Current Opacity: {currentOpacity}/1
+                </Typography>
+                <Slider value={currentOpacity} aria-label="Default" valueLabelDisplay="auto" max={10} onChange={handleChangeOpacity} />
+              </StyledSliderOpacity>
             </CanvasContainer>
             <RightSideContainer>
               <CuboidInfo cuboid={currentCuboid} />
